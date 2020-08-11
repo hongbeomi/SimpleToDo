@@ -3,5 +3,5 @@ class Task {
   final String title;
   final String description;
 
-  Task({this.id, this.title, this.description});g
+  Task({this.id, this.title, this.description});
 }
