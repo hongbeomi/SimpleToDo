@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:simpletodo/data/Task.dart';
-import 'package:simpletodo/page/HomePage.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
@@ -38,18 +37,22 @@ class DataBaseHelper {
     );
   }
 
-  createData(Task task) async {
-    return await ((await database).rawInsert("INSERT INTO $tableName(title, description) VALUES(?, ?)", [task.title, task.description]));
+  insertData(Task task) async {
+    return await ((await database).insert(tableName, task.toMap()));
   }
 
-  Future<List<Task>> getAllData(Task task) async {
-    var res = await ((await database).rawQuery("SELECT * FROM $tableName"));
+  Future<List<Task>> getAllData() async {
+    var res = await ((await database).query(tableName));
     List<Task> list = res.isNotEmpty ? res.map((c) => Task(id:c['id'], title:c['title'], description:c['description'])).toList() : [];
     return list;
   }
 
   deleteData(int id) async {
-    return await ((await database).rawDelete("DELETE FROM $tableName WHERE id = ?", [id]));
+    return await ((await database).delete(
+      tableName,
+      where: "id = ?",
+      whereArgs: [id]
+    ));
   }
 
 }

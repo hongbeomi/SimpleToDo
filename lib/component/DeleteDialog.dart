@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:simpletodo/db/DataBaseHelper.dart';
 
 class DeleteDialog extends CupertinoAlertDialog {
 
-  DeleteDialog({this.context});
+  DeleteDialog({this.context, @required this.id});
 
+  final int id;
   final BuildContext context;
 
   @override
@@ -21,14 +23,13 @@ class DeleteDialog extends CupertinoAlertDialog {
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
-            print("삭제!");
-            Navigator.of(context).pop();
+            Navigator.pop(context, true);
           },
         ),
         CupertinoDialogAction(
           child: Text("Cancel", style: TextStyle(color: Colors.lightBlue)),
           onPressed: () {
-            Navigator.of(context).pop();
+            Navigator.pop(context, false);
           },
         )
       ];

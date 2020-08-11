@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'HomePage.dart';
 
-void main() {
-  runApp(SimpleToDo());
-}
+void main() => runApp(SimpleToDo());
 
 class SimpleToDo extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -17,4 +16,5 @@ class SimpleToDo extends StatelessWidget {
       home: HomePage(title: 'All Task'),
     );
   }
+
 }

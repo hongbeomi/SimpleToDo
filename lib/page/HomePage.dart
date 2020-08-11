@@ -1,26 +1,26 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:path/path.dart';
 import 'package:simpletodo/component/TaskItemView.dart';
-import 'package:sqflite/sqflite.dart';
-
+import 'package:simpletodo/data/Task.dart';
+import 'package:simpletodo/db/DataBaseHelper.dart';
 
 class HomePage extends StatefulWidget {
+
   HomePage({Key key, this.title}) : super(key: key);
 
   final String title;
 
   @override
-  _HomePageState createState() => _HomePageState();
+  HomePageState createState() => HomePageState();
+
 }
 
-class _HomePageState extends State<HomePage> {
-  List<String> tasks = [];
+class HomePageState extends State<HomePage> {
 
   void _addTask() {
     setState(() {
-      tasks.add("ㅋㅋ");
+      DataBaseHelper().insertData(Task(title: "hello", description: "world"));
     });
   }
 
@@ -35,23 +35,34 @@ class _HomePageState extends State<HomePage> {
         Expanded(
             flex: 1,
             child: Container(
-              padding: const EdgeInsets.all(24.0),
-              alignment: Alignment.topLeft,
+                padding: const EdgeInsets.all(24.0),
+                alignment: Alignment.topLeft,
+                color: Colors.white,
                 child: Text(
-              widget.title,
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 48,
-              ),
-            ))),
+                  widget.title,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 48,
+                  ),
+                ))),
         Expanded(
             flex: 7,
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16.0),
-              scrollDirection: Axis.vertical,
-              itemCount: tasks.length,
-              itemBuilder: (BuildContext context, int index) {
-                return TaskItemView(task: tasks[index] ?? "");
+            child: FutureBuilder(
+              future: DataBaseHelper().getAllData(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    padding: const EdgeInsets.all(16.0),
+                    scrollDirection: Axis.vertical,
+                    itemCount: snapshot.data.length,
+                    itemBuilder: (BuildContext context, int index, ) {
+                      return TaskItemView(task: snapshot.data[index] ?? "", onDelete: refresh);
+                    },
+                  );
+                } else {
+                  return Center(child: CircularProgressIndicator());
+                }
               },
             ))
       ]),
@@ -64,4 +75,11 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
+  refresh(int id) {
+    setState(() {
+      DataBaseHelper().deleteData(id);
+    });
+  }
+
 }
