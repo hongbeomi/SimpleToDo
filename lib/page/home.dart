@@ -41,7 +41,7 @@ class _HomePageState extends State<HomePage> {
         scrollDirection: Axis.vertical,
         itemCount: tasks.length,
         itemBuilder: (BuildContext context, int index) {
-          return TaskItemView(task: tasks[index]);
+          return TaskItemView(task: tasks[index] ?? "");
         },
       ),
       floatingActionButton: FloatingActionButton(
