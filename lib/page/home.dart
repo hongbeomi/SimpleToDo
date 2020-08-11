@@ -1,4 +1,7 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:simpletodo/component/taskItemView.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key, this.title}) : super(key: key);
@@ -10,11 +13,11 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  int _counter = 0;
+  List<String> tasks = [];
 
-  void _incrementCounter() {
+  void _addTask() {
     setState(() {
-      _counter++;
+      tasks.add("ㅋㅋ");
     });
   }
 
@@ -33,24 +36,19 @@ class _HomePageState extends State<HomePage> {
         elevation: 0.0,
         centerTitle: false,
       ),
-      extendBodyBehindAppBar: true,
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(16.0),
+        scrollDirection: Axis.vertical,
+        itemCount: tasks.length,
+        itemBuilder: (BuildContext context, int index) {
+          return TaskItemView(task: tasks[index]);
+        },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
+        onPressed: () {
+          _addTask();
+        },
+        tooltip: 'Add Task',
         child: Icon(Icons.add),
       ),
     );
