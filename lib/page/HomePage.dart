@@ -20,7 +20,7 @@ class HomePageState extends State<HomePage> {
 
   void _addTask() {
     setState(() {
-      DataBaseHelper().insertData(Task(title: "hello", description: "world"));
+      DataBaseHelper().insertData(Task(title: "hello", description: "world", isFinish: 1));
     });
   }
 

@@ -6,11 +6,12 @@ import 'package:simpletodo/data/Task.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
-
   final String tableName = "TASK";
 
   DataBaseHelper._();
+
   static final DataBaseHelper _db = DataBaseHelper._();
+
   factory DataBaseHelper() => _db;
 
   static Database _dataBase;
@@ -23,18 +24,19 @@ class DataBaseHelper {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    return openDatabase(
-      join(documentsDirectory.path, 'task_database.db'),
-      version: 1,
-      onCreate: (db, version) {
-        return db.execute(
-          "CREATE TABLE $tableName(id INTEGER PRIMARY KEY, title TEXT, description TEXT)",
-        );
-      },
-      onUpgrade: (db, oldVersion, newVersion) {
-        // TODO
-      }
+    return openDatabase(join(documentsDirectory.path, 'task_database.db'),
+        version: 1, onCreate: _onCreate, onUpgrade: _onUpgrade);
+  }
+
+  _onCreate(Database db, int newVersion) {
+    return db.execute(
+      "CREATE TABLE $tableName(id INTEGER PRIMARY KEY, title TEXT, description TEXT, isFinish INTEGER)",
     );
+  }
+
+  _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    await db.execute("DROP TABLE IF EXISTS $tableName");
+    _onCreate(db, newVersion);
   }
 
   insertData(Task task) async {
@@ -43,16 +45,19 @@ class DataBaseHelper {
 
   Future<List<Task>> getAllData() async {
     var res = await ((await database).query(tableName));
-    List<Task> list = res.isNotEmpty ? res.map((c) => Task(id:c['id'], title:c['title'], description:c['description'])).toList() : [];
+    List<Task> list = res.isNotEmpty
+        ? res.map((c) => Task(
+                id: c['id'],
+                title: c['title'],
+                description: c['description'],
+                isFinish: c['isFinish']))
+            .toList()
+        : [];
     return list;
   }
 
   deleteData(int id) async {
-    return await ((await database).delete(
-      tableName,
-      where: "id = ?",
-      whereArgs: [id]
-    ));
+    return await ((await database)
+        .delete(tableName, where: "id = ?", whereArgs: [id]));
   }
-
 }
