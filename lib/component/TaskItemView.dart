@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simpletodo/component/deleteDialog.dart';
+import 'package:simpletodo/component/DeleteDialog.dart';
 
 class TaskItemView extends StatefulWidget {
   TaskItemView({Key key, this.task}) : super(key: key);
