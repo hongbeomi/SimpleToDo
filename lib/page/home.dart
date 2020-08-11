@@ -25,25 +25,33 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          widget.title,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 48,
-          ),
-        ),
-        backgroundColor: Colors.transparent,
+        backgroundColor: Colors.white,
         elevation: 0.0,
-        centerTitle: false,
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16.0),
-        scrollDirection: Axis.vertical,
-        itemCount: tasks.length,
-        itemBuilder: (BuildContext context, int index) {
-          return TaskItemView(task: tasks[index] ?? "");
-        },
-      ),
+      body: Column(children: <Widget>[
+        Expanded(
+            flex: 1,
+            child: Container(
+              padding: const EdgeInsets.all(24.0),
+              alignment: Alignment.topLeft,
+                child: Text(
+              widget.title,
+              style: TextStyle(
+                color: Colors.black,
+                fontSize: 48,
+              ),
+            ))),
+        Expanded(
+            flex: 7,
+            child: ListView.builder(
+              padding: const EdgeInsets.all(16.0),
+              scrollDirection: Axis.vertical,
+              itemCount: tasks.length,
+              itemBuilder: (BuildContext context, int index) {
+                return TaskItemView(task: tasks[index] ?? "");
+              },
+            ))
+      ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           _addTask();

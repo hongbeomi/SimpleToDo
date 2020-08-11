@@ -28,7 +28,7 @@ class _TaskItemViewState extends State<TaskItemView> {
           child: Container(
             padding: EdgeInsets.all(16.0),
             alignment: Alignment.center,
-            height: 56,
+            height: 64,
             child: Text(task ?? ""),
           ),
         ));

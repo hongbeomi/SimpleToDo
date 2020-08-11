@@ -8,10 +8,10 @@ class DeleteDialog extends CupertinoAlertDialog {
   final BuildContext context;
 
   @override
-  Widget get title => Text("Delete");
+  Widget get title => Text("제거");
 
   @override
-  Widget get content => Text("task를 삭제하시겠습니까?");
+  Widget get content => Text("task를 지우시겠습니까?");
 
   @override
   List<Widget> get actions => <Widget>[
@@ -22,6 +22,7 @@ class DeleteDialog extends CupertinoAlertDialog {
           ),
           onPressed: () {
             print("삭제!");
+            Navigator.of(context).pop();
           },
         ),
         CupertinoDialogAction(
@@ -31,4 +32,5 @@ class DeleteDialog extends CupertinoAlertDialog {
           },
         )
       ];
+
 }
