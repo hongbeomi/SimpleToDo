@@ -1,9 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:simpletodo/component/task_item_view.dart';
-import 'package:simpletodo/data/task.dart';
-import 'package:simpletodo/task_view_model.dart';
+import 'package:simpletodo/presentation/component/task_item_view.dart';
+import 'package:simpletodo/data/model/task.dart';
+import 'package:simpletodo/presentation/task_view_model.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -23,6 +23,7 @@ class HomePageState extends State<HomePage> {
     final viewModel = Provider.of<TaskViewModel>(context, listen: true);
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0.0,
@@ -56,7 +57,12 @@ class HomePageState extends State<HomePage> {
                       BuildContext context,
                       int index,
                     ) {
-                      return TaskItemView(task: snapshot.data[index] ?? []);
+                      return TaskItemView(
+                        task: snapshot.data[index] ?? [],
+                        onDelete: (context) {
+                          viewModel.deleteTask(snapshot.data[index].id);
+                        },
+                      );
                     },
                   );
                 } else {
@@ -74,7 +80,5 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
-
-
 
 }

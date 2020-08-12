@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:simpletodo/data/task.dart';
+import 'package:simpletodo/data/model/task.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
@@ -24,15 +24,13 @@ class DataBaseHelper {
 
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    return openDatabase(join(documentsDirectory.path, 'task_database.db'),
-        version: 1, onCreate: _onCreate, onUpgrade: _onUpgrade);
+    return openDatabase(join(documentsDirectory.path, 'task_database.data.db'),
+        version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
-  _onCreate(Database db, int newVersion) {
-    return db.execute(
-      "CREATE TABLE $tableName(id INTEGER PRIMARY KEY, title TEXT, description TEXT, isFinish INTEGER)",
-    );
-  }
+  _onCreate(Database db, int newVersion) => db.execute(
+        "CREATE TABLE $tableName(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT, description TEXT, isFinish INTEGER)",
+      );
 
   _onUpgrade(Database db, int oldVersion, int newVersion) async {
     await db.execute("DROP TABLE IF EXISTS $tableName");
@@ -42,7 +40,8 @@ class DataBaseHelper {
   Future<List<Task>> getAllData() async {
     var res = await ((await database).query(tableName));
     List<Task> list = res.isNotEmpty
-        ? res.map((c) => Task(
+        ? res
+            .map((c) => Task(
                 id: c['id'],
                 title: c['title'],
                 description: c['description'],
@@ -52,15 +51,15 @@ class DataBaseHelper {
     return list;
   }
 
-  insertData(Task task) async {
-    return await ((await database).insert(tableName, task.toMap()));
-  }
+  insertData(Task task) async =>
+      await ((await database).insert(tableName, task.toMap()));
 
-  updateData(Task task) async {
-    return await ((await database).update(tableName, task.toMap(), where : "id = ?", whereArgs: [task.id]));
-  }
+  updateData(Task task) async => await ((await database)
+      .update(tableName, task.toMap(), where: "id = ?", whereArgs: [task.id], conflictAlgorithm:  ConflictAlgorithm.replace));
 
   deleteData(int id) async {
-    return await ((await database).delete(tableName, where: "id = ?", whereArgs: [id]));
+    await ((await database).close());
+    await ((await database).delete(tableName, where: "id = ?", whereArgs: [id]));
   }
+
 }

@@ -1,26 +1,29 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:simpletodo/component/delete_dialog.dart';
-import 'package:simpletodo/data/task.dart';
-import 'package:simpletodo/task_view_model.dart';
+import 'package:simpletodo/presentation/component/delete_dialog.dart';
+import 'package:simpletodo/data/model/task.dart';
+import 'package:simpletodo/presentation/task_view_model.dart';
 
 class TaskItemView extends StatefulWidget {
-  TaskItemView({Key key, @required this.task}) : super(key: key);
 
+  TaskItemView({Key key, @required this.task, @required this.onDelete}) : super(key: key);
+
+  final void Function(BuildContext context) onDelete;
   final Task task;
 
   @override
-  _TaskItemViewState createState() => _TaskItemViewState(this.task);
+  _TaskItemViewState createState() => _TaskItemViewState(this.task, this.onDelete);
 }
 
 class _TaskItemViewState extends State<TaskItemView> {
-  _TaskItemViewState(Task task) {
-    this.task = task;
+  _TaskItemViewState(this.task, this.onDelete) {
+    print(task.id);
     this._isFinish = task.isFinish == 0 ?? false;
   }
 
-  Task task;
+  final void Function(BuildContext context) onDelete;
+  final Task task;
   bool _isFinish;
 
   @override
@@ -35,28 +38,34 @@ class _TaskItemViewState extends State<TaskItemView> {
                     context: context,
                     id: task.id,
                   ));
-          if (result) {
-            viewModel.deleteTask(task.id);
+          if (result == true) {
+            onDelete(context);
+//            viewModel.deleteTask(task.id);
           }
         },
         child: Card(
-          color: Color.fromARGB(100, 243, 243, 247),
+          color: Colors.white,
+          elevation: 6.0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
           child: Container(
-              padding: EdgeInsets.all(16.0),
               alignment: Alignment.center,
               child: CheckboxListTile(
                   controlAffinity: ListTileControlAffinity.leading,
                   value: _isFinish,
                   title: Text(task.description,
+                      textAlign: TextAlign.right,
                       style: _isFinish
-                          ? TextStyle(decoration: TextDecoration.lineThrough)
-                          : null),
+                          ? TextStyle(
+                              decoration: TextDecoration.lineThrough,
+                              fontSize: 20)
+                          : TextStyle(fontSize: 20)),
                   onChanged: (isChecked) {
                     setState(() {
                       _isFinish = isChecked;
-                      viewModel.updateTask(
-                          task.copy(id: task.id, isFinish: _isFinish ? 0 : 1));
                     });
+                    viewModel.updateTask(
+                        task.copy(id: task.id, isFinish: _isFinish ? 0 : 1));
                   })),
         ));
   }

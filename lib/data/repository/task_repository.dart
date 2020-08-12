@@ -1,5 +1,5 @@
 
-import 'package:simpletodo/data/task.dart';
+import 'package:simpletodo/data/model/task.dart';
 
 abstract class TaskRepository {
 
