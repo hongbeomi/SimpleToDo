@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:simpletodo/data/Task.dart';
+import 'package:simpletodo/data/task.dart';
 import 'package:sqflite/sqflite.dart';
 
 class DataBaseHelper {
@@ -39,10 +39,6 @@ class DataBaseHelper {
     _onCreate(db, newVersion);
   }
 
-  insertData(Task task) async {
-    return await ((await database).insert(tableName, task.toMap()));
-  }
-
   Future<List<Task>> getAllData() async {
     var res = await ((await database).query(tableName));
     List<Task> list = res.isNotEmpty
@@ -56,8 +52,15 @@ class DataBaseHelper {
     return list;
   }
 
+  insertData(Task task) async {
+    return await ((await database).insert(tableName, task.toMap()));
+  }
+
+  updateData(Task task) async {
+    return await ((await database).update(tableName, task.toMap(), where : "id = ?", whereArgs: [task.id]));
+  }
+
   deleteData(int id) async {
-    return await ((await database)
-        .delete(tableName, where: "id = ?", whereArgs: [id]));
+    return await ((await database).delete(tableName, where: "id = ?", whereArgs: [id]));
   }
 }

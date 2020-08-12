@@ -1,31 +1,27 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:simpletodo/component/TaskItemView.dart';
-import 'package:simpletodo/data/Task.dart';
-import 'package:simpletodo/db/DataBaseHelper.dart';
+import 'package:provider/provider.dart';
+import 'package:simpletodo/component/task_item_view.dart';
+import 'package:simpletodo/data/task.dart';
+import 'package:simpletodo/task_view_model.dart';
 
 class HomePage extends StatefulWidget {
 
-  HomePage({Key key, this.title}) : super(key: key);
+  HomePage({Key key}) : super(key: key);
 
-  final String title;
+  final String title = 'All Task';
 
   @override
   HomePageState createState() => HomePageState();
-
 }
 
 class HomePageState extends State<HomePage> {
 
-  void _addTask() {
-    setState(() {
-      DataBaseHelper().insertData(Task(title: "hello", description: "world", isFinish: 1));
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+
+    final viewModel = Provider.of<TaskViewModel>(context, listen: true);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -48,7 +44,7 @@ class HomePageState extends State<HomePage> {
         Expanded(
             flex: 7,
             child: FutureBuilder(
-              future: DataBaseHelper().getAllData(),
+              future: viewModel.loadTasks(),
               builder:
                   (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
                 if (snapshot.hasData) {
@@ -56,8 +52,11 @@ class HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(16.0),
                     scrollDirection: Axis.vertical,
                     itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index, ) {
-                      return TaskItemView(task: snapshot.data[index] ?? "", onDelete: refresh);
+                    itemBuilder: (
+                      BuildContext context,
+                      int index,
+                    ) {
+                      return TaskItemView(task: snapshot.data[index] ?? []);
                     },
                   );
                 } else {
@@ -68,7 +67,7 @@ class HomePageState extends State<HomePage> {
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          _addTask();
+          viewModel.insertTask(Task(title: "hello", description: "world", isFinish: 1));
         },
         tooltip: 'Add Task',
         child: Icon(Icons.add),
@@ -76,10 +75,6 @@ class HomePageState extends State<HomePage> {
     );
   }
 
-  refresh(int id) {
-    setState(() {
-      DataBaseHelper().deleteData(id);
-    });
-  }
+
 
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:simpletodo/db/DataBaseHelper.dart';
+import 'package:simpletodo/db/database_helper.dart';
 
 class DeleteDialog extends CupertinoAlertDialog {
 
