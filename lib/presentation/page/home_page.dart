@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simpletodo/presentation/component/task_item_view.dart';
@@ -6,7 +5,6 @@ import 'package:simpletodo/data/model/task.dart';
 import 'package:simpletodo/presentation/task_view_model.dart';
 
 class HomePage extends StatefulWidget {
-
   HomePage({Key key}) : super(key: key);
 
   final String title = 'All Task';
@@ -19,7 +17,6 @@ class HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     final viewModel = Provider.of<TaskViewModel>(context, listen: true);
 
     return Scaffold(
@@ -48,37 +45,36 @@ class HomePageState extends State<HomePage> {
               future: viewModel.loadTasks(),
               builder:
                   (BuildContext context, AsyncSnapshot<List<Task>> snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    padding: const EdgeInsets.all(16.0),
-                    scrollDirection: Axis.vertical,
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (
-                      BuildContext context,
-                      int index,
-                    ) {
-                      return TaskItemView(
-                        task: snapshot.data[index] ?? [],
-                        onDelete: (context) {
-                          viewModel.deleteTask(snapshot.data[index].id);
+                return snapshot.hasData
+                    ? ListView.builder(
+                        padding: const EdgeInsets.all(16.0),
+                        scrollDirection: Axis.vertical,
+                        itemCount: snapshot.data.length,
+                        itemBuilder: (
+                          BuildContext context,
+                          int index,
+                        ) {
+                          return TaskItemView(
+                            key: UniqueKey(),
+                            task: snapshot.data[index] ?? [],
+                            onDelete: () {
+                                viewModel.deleteTask(snapshot.data[index].id);
+                            },
+                          );
                         },
-                      );
-                    },
-                  );
-                } else {
-                  return Center(child: CircularProgressIndicator());
-                }
+                      )
+                    : Center(child: CircularProgressIndicator());
               },
             ))
       ]),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          viewModel.insertTask(Task(title: "hello", description: "world", isFinish: 1));
+          viewModel.insertTask(
+              Task(title: "hello", description: "world", isFinish: 1));
         },
         tooltip: 'Add Task',
         child: Icon(Icons.add),
       ),
     );
   }
-
 }

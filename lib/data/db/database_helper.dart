@@ -37,7 +37,7 @@ class DataBaseHelper {
     _onCreate(db, newVersion);
   }
 
-  Future<List<Task>> getAllData() async {
+  getAllData() async {
     var res = await ((await database).query(tableName));
     List<Task> list = res.isNotEmpty
         ? res
@@ -55,11 +55,8 @@ class DataBaseHelper {
       await ((await database).insert(tableName, task.toMap()));
 
   updateData(Task task) async => await ((await database)
-      .update(tableName, task.toMap(), where: "id = ?", whereArgs: [task.id], conflictAlgorithm:  ConflictAlgorithm.replace));
+      .update(tableName, task.toMap(), where: "id = ?", whereArgs: [task.id]));
 
-  deleteData(int id) async {
-    await ((await database).close());
-    await ((await database).delete(tableName, where: "id = ?", whereArgs: [id]));
-  }
-
+  deleteData(int id) async => await ((await database)
+      .delete(tableName, where: "id = ?", whereArgs: [id]));
 }

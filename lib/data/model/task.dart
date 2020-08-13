@@ -22,4 +22,9 @@ class Task {
       title: title ?? this.title,
       description: description ?? this.description,
       isFinish: isFinish ?? this.isFinish);
+
+  @override
+  String toString() {
+    return id.toString() + " " + title + " " + description + " " + isFinish.toString();
+  }
 }

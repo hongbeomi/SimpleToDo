@@ -9,7 +9,7 @@ class TaskItemView extends StatefulWidget {
 
   TaskItemView({Key key, @required this.task, @required this.onDelete}) : super(key: key);
 
-  final void Function(BuildContext context) onDelete;
+  final void Function() onDelete;
   final Task task;
 
   @override
@@ -19,10 +19,11 @@ class TaskItemView extends StatefulWidget {
 class _TaskItemViewState extends State<TaskItemView> {
   _TaskItemViewState(this.task, this.onDelete) {
     print(task.id);
-    this._isFinish = task.isFinish == 0 ?? false;
+    print(task.isFinish);
+    this._isFinish = task.isFinish == 0;
   }
 
-  final void Function(BuildContext context) onDelete;
+  final void Function() onDelete;
   final Task task;
   bool _isFinish;
 
@@ -39,8 +40,7 @@ class _TaskItemViewState extends State<TaskItemView> {
                     id: task.id,
                   ));
           if (result == true) {
-            onDelete(context);
-//            viewModel.deleteTask(task.id);
+              onDelete();
           }
         },
         child: Card(
