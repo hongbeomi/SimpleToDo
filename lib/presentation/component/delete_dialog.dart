@@ -21,15 +21,11 @@ class DeleteDialog extends CupertinoAlertDialog {
             "Ok",
             style: TextStyle(color: Colors.red),
           ),
-          onPressed: () {
-            Navigator.pop(context, true);
-          },
+          onPressed: () => Navigator.pop(context, true)
         ),
         CupertinoDialogAction(
           child: Text("Cancel", style: TextStyle(color: Colors.lightBlue)),
-          onPressed: () {
-            Navigator.pop(context, false);
-          },
+          onPressed: () => Navigator.pop(context, false)
         )
       ];
 

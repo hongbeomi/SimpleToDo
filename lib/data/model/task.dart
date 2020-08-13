@@ -3,28 +3,29 @@ import 'package:flutter/foundation.dart';
 class Task {
   final int id;
   final String title;
-  final String description;
 
   // 0 true, 1 false
   final int isFinish;
 
-  Task({this.id, this.title, this.description, this.isFinish});
+  Task({this.id, this.title, this.isFinish});
 
   toMap() => {
         'id': id,
         'title': title,
-        'description': description,
         'isFinish': isFinish
       };
 
-  copy({@required int id, String title, String description, int isFinish}) => Task(
-      id: id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      isFinish: isFinish ?? this.isFinish);
+  copy({@required int id, String title, int isFinish}) =>
+      Task(
+          id: id,
+          title: title ?? this.title,
+          isFinish: isFinish ?? this.isFinish);
 
   @override
-  String toString() {
-    return id.toString() + " " + title + " " + description + " " + isFinish.toString();
-  }
+  String toString() =>
+      id.toString() +
+      " " +
+      title +
+      " " +
+      isFinish.toString();
 }
