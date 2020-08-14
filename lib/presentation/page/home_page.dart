@@ -32,7 +32,7 @@ class HomePageState extends State<HomePage> {
         Expanded(
             flex: 1,
             child: Container(
-                padding: const EdgeInsets.all(24.0),
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
                 alignment: Alignment.topLeft,
                 color: Colors.white,
                 child: Text(
