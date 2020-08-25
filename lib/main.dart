@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simpletodo/presentation/page/add_page.dart';
 import 'package:simpletodo/presentation/page/home_page.dart';
-import 'package:simpletodo/presentation/task_view_model.dart';
+import 'package:simpletodo/presentation/viewmodel/task_view_model.dart';
 
 void main() => runApp(SimpleToDo());
 const ADD_PAGE = '/add';

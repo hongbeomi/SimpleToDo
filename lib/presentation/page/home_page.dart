@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:simpletodo/presentation/component/task_item_view.dart';
 import 'package:simpletodo/data/model/task.dart';
 import 'package:simpletodo/presentation/page/add_page.dart';
-import 'package:simpletodo/presentation/task_view_model.dart';
+import 'package:simpletodo/presentation/viewmodel/task_view_model.dart';
 
 class HomePage extends StatefulWidget {
   HomePage({Key key}) : super(key: key);

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:simpletodo/data/model/task.dart';
-import '../task_view_model.dart';
+import '../viewmodel/task_view_model.dart';
 
 class AddPage extends StatefulWidget {
   AddPage({Key key}) : super(key: key);

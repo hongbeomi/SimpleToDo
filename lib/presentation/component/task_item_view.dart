@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:simpletodo/data/model/task.dart';
 import 'package:simpletodo/presentation/component/delete_dialog.dart';
-import 'package:simpletodo/presentation/task_view_model.dart';
+import 'package:simpletodo/presentation/viewmodel/task_view_model.dart';
 
 class TaskItemView extends StatefulWidget {
   TaskItemView({Key key, @required this.task, @required this.onDelete})
