@@ -25,11 +25,11 @@ class DataBaseHelper {
   initDB() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
     return openDatabase(join(documentsDirectory.path, 'task_database.data.db'),
-        version: 1, onCreate: _onCreate, onUpgrade: _onUpgrade);
+        version: 2, onCreate: _onCreate, onUpgrade: _onUpgrade);
   }
 
   _onCreate(Database db, int newVersion) => db.execute(
-        "CREATE TABLE $tableName(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT, isFinish INTEGER)",
+        "CREATE TABLE $tableName(id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, title TEXT, path TEXT, isFinish INTEGER)",
       );
 
   _onUpgrade(Database db, int oldVersion, int newVersion) async {
@@ -44,6 +44,7 @@ class DataBaseHelper {
             .map((c) => Task(
                 id: c['id'],
                 title: c['title'],
+                path: c['path'],
                 isFinish: c['isFinish']))
             .toList()
         : [];

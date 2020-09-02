@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class DeleteDialog extends CupertinoAlertDialog {
-
   DeleteDialog({this.context, @required this.id});
 
   final int id;
@@ -17,16 +16,13 @@ class DeleteDialog extends CupertinoAlertDialog {
   @override
   List<Widget> get actions => <Widget>[
         CupertinoDialogAction(
-          child: Text(
-            "Ok",
-            style: TextStyle(color: Colors.red),
-          ),
-          onPressed: () => Navigator.pop(context, true)
-        ),
+            child: Text(
+              "Ok",
+              style: TextStyle(color: Colors.red),
+            ),
+            onPressed: () => Navigator.pop(context, true)),
         CupertinoDialogAction(
-          child: Text("Cancel", style: TextStyle(color: Colors.lightBlue)),
-          onPressed: () => Navigator.pop(context, false)
-        )
+            child: Text("Cancel", style: TextStyle(color: Colors.lightBlue)),
+            onPressed: () => Navigator.pop(context, false))
       ];
-
 }

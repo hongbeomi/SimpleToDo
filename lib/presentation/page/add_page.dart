@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_neumorphic/flutter_neumorphic.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:simpletodo/data/model/task.dart';
+
 import '../viewmodel/task_view_model.dart';
+
+const String ADD_PAGE_TITLE = 'New Task';
 
 class AddPage extends StatefulWidget {
   AddPage({Key key}) : super(key: key);
-
-  final String title = 'New Task';
 
   @override
   AddPageState createState() => AddPageState();
@@ -16,74 +22,175 @@ class AddPage extends StatefulWidget {
 class AddPageState extends State<AddPage> {
   String _title = "";
   bool _result = false;
+  String _imagePath = "";
 
   @override
   Widget build(BuildContext context) {
     final viewModel = Provider.of<TaskViewModel>(context, listen: false);
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context, _result),
-          color: Colors.black,
-          alignment: Alignment(1.0, 0.0),
+      appBar: NeumorphicAppBar(
+        title: Text(
+          ADD_PAGE_TITLE,
+          style: TextStyle(fontSize: 36, fontWeight: FontWeight.w700),
         ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(50.0),
-          child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              alignment: Alignment.topLeft,
-              color: Colors.white,
-              child: Text(
-                widget.title,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 48,
-                    fontWeight: FontWeight.w700),
-              )),
-        ),
-        backgroundColor: Colors.white,
-        elevation: 0.0,
+        buttonStyle:
+            NeumorphicStyle(depth: 0.0, boxShape: NeumorphicBoxShape.circle()),
       ),
-      body: ListView(
-        children: <Widget>[
-          Padding(
-            padding:
-                const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
-            child: TextField(
-              decoration: InputDecoration(
-                  hintText: "Title",
-                  hintStyle:
-                      TextStyle(fontSize: 32, fontWeight: FontWeight.w500),
-                  border: InputBorder.none),
-              style: TextStyle(fontSize: 32, fontWeight: FontWeight.w500),
-              maxLines: null,
-              onChanged: (title) => _title = title,
+      body: NeumorphicBackground(
+        padding: const EdgeInsets.symmetric(vertical: 16.0, horizontal: 24.0),
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              flex: 3,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  neuImageWrapper(),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          checkTitleEmpty(
-              () => {viewModel.insertTask(Task(title: _title, isFinish: 1))});
-          Navigator.pop(context, _result);
-        },
-        tooltip: 'Add Task',
-        child: Icon(Icons.check),
-        backgroundColor: Colors.green,
+            Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                padding: EdgeInsets.only(left: 8),
+                height: 36,
+                child: Text(
+                  "description",
+                  style: TextStyle(
+                    color: Colors.black26,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.start,
+                ),
+              ),
+            ),
+            Flexible(
+                flex: 5,
+                child: Stack(fit: StackFit.expand, children: [neuTextField()])),
+            Flexible(
+                flex: 2,
+                child: Stack(fit: StackFit.expand, children: [
+                  neuAddButton(() => {
+                        viewModel.insertTask(Task(
+                            title: _title,
+                            path: _imagePath.isEmpty ? "" : _imagePath,
+                            isFinish: 1))
+                      })
+                ])),
+          ],
+        ),
       ),
     );
   }
 
-  checkTitleEmpty(Function insertAction) {
+  _checkTitleEmpty(Function insertAction, BuildContext context) {
     if (_title.isNotEmpty) {
       insertAction();
-      _result = true;
-    } else {
-      _result = false;
+      Navigator.pop(context);
     }
+  }
+
+  _titleChangedListener(String title) {
+    setState(() {
+      _title = title;
+    });
+  }
+
+  _getGalleryImage() async {
+    PickedFile image =
+        await ImagePicker().getImage(source: ImageSource.gallery);
+    setState(() {
+      _imagePath = image.path;
+    });
+  }
+
+  // todo 사용할까?
+  _getCameraImage() async {
+    PickedFile image = await ImagePicker().getImage(source: ImageSource.camera);
+    setState(() {
+      _imagePath = image.path;
+    });
+  }
+
+  Widget neuImageWrapper() {
+    return Center(
+      child: NeumorphicButton(
+          margin: EdgeInsets.fromLTRB(0, 0, 0, 24),
+          padding: EdgeInsets.zero,
+          duration: Duration(milliseconds: 300),
+          onPressed: () {
+//            if (_image != null) {
+//              Navigator.push(context, MaterialPageRoute(builder: (_) {
+//                return ImageDetailScreen(imagePath: _image);
+//              }));
+//            } else {
+            _getGalleryImage();
+//            }
+          },
+          style: NeumorphicStyle(
+            boxShape: NeumorphicBoxShape.circle(),
+            depth: 5,
+            intensity: 1.0,
+          ),
+          child: neuImageSurface()),
+    );
+  }
+
+  Widget neuImageSurface() {
+    return Neumorphic(
+      padding: EdgeInsets.zero,
+      margin: EdgeInsets.all(5.0),
+      style: NeumorphicStyle(
+        boxShape: NeumorphicBoxShape.circle(),
+        shape: NeumorphicShape.flat,
+      ),
+      child: SizedBox.expand(
+        child: _imagePath.isNotEmpty
+            ? Image.file(File(_imagePath), fit: BoxFit.fill)
+            : SvgPicture.asset('assets/need_photo.svg', fit: BoxFit.contain)
+      ),
+    );
+  }
+
+  Widget neuTextField() {
+    return Neumorphic(
+      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 24),
+      style: NeumorphicStyle(
+        depth: -3.0,
+        intensity: 1.0,
+        boxShape:
+            NeumorphicBoxShape.roundRect(BorderRadius.all(Radius.circular(8))),
+      ),
+      child: TextField(
+        decoration: InputDecoration(border: InputBorder.none),
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        maxLines: null,
+        onChanged: (title) => _titleChangedListener(title),
+      ),
+    );
+  }
+
+  Widget neuAddButton(Function insertAction) {
+    return NeumorphicButton(
+      margin: EdgeInsets.symmetric(horizontal: 0, vertical: 24),
+      style: NeumorphicStyle(
+        depth: _title.isEmpty ? 0.0 : 5.0,
+        intensity: 1.0,
+        boxShape:
+            NeumorphicBoxShape.roundRect(BorderRadius.all(Radius.circular(8))),
+      ),
+      child: Center(
+          child: Text("Add Task",
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+                color: _title.isEmpty ? Colors.black26 : Colors.blueAccent,
+              ))),
+      onPressed: () {
+        _checkTitleEmpty(() => { insertAction()}, context);
+      },
+    );
   }
 }

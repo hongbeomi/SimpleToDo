@@ -1,8 +1,6 @@
-
 import 'package:simpletodo/data/model/task.dart';
 
 abstract class TaskRepository {
-
   Future<List<Task>> loadTasks();
 
   Future insertTask(Task task);
@@ -10,5 +8,4 @@ abstract class TaskRepository {
   Future updateTask(Task task);
 
   Future deleteTask(int id);
-
 }
