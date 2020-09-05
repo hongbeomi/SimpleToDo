@@ -106,7 +106,7 @@ class AddPageState extends State<AddPage> {
     });
   }
 
-  // todo 사용할까?
+  // todo 과연 사용할까?
   _getCameraImage() async {
     PickedFile image = await ImagePicker().getImage(source: ImageSource.camera);
     setState(() {
@@ -147,10 +147,9 @@ class AddPageState extends State<AddPage> {
         shape: NeumorphicShape.flat,
       ),
       child: SizedBox.expand(
-        child: _imagePath.isNotEmpty
-            ? Image.file(File(_imagePath), fit: BoxFit.fill)
-            : SvgPicture.asset('assets/need_photo.svg', fit: BoxFit.contain)
-      ),
+          child: _imagePath.isNotEmpty
+              ? Image.file(File(_imagePath), fit: BoxFit.fill)
+              : SvgPicture.asset('assets/need_photo.svg', fit: BoxFit.contain)),
     );
   }
 
@@ -189,7 +188,7 @@ class AddPageState extends State<AddPage> {
                 color: _title.isEmpty ? Colors.black26 : Colors.blueAccent,
               ))),
       onPressed: () {
-        _checkTitleEmpty(() => { insertAction()}, context);
+        _checkTitleEmpty(() => {insertAction()}, context);
       },
     );
   }

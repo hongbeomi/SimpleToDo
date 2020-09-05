@@ -22,7 +22,7 @@ class ImageDetailScreen extends StatelessWidget {
                 tag: heroKey,
                 child: task.path.isNotEmpty
                     ? Image.file(File(task.path))
-                    : getImage()),
+                    : getDummyImage()),
           ),
           Expanded(
             flex: 6,
@@ -52,7 +52,7 @@ class ImageDetailScreen extends StatelessWidget {
   }
 }
 
-getImage() {
+getDummyImage() {
   return Image.asset(
     "assets/image_2.jpg",
     fit: BoxFit.fill,

@@ -1,9 +1,11 @@
 import 'dart:math';
 
+import 'package:flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:preload_page_view/preload_page_view.dart';
 import 'package:provider/provider.dart';
 import 'package:simpletodo/data/model/task.dart';
 import 'package:simpletodo/main.dart';
@@ -22,8 +24,8 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  final PageController _pageController =
-      PageController(initialPage: 0, viewportFraction: 0.8);
+  final PreloadPageController _pageController =
+      PreloadPageController(initialPage: 0, viewportFraction: 0.8);
   double page = 0;
 
   bool _handlePageNotification(ScrollNotification notification) {
@@ -65,8 +67,9 @@ class HomePageState extends State<HomePage> {
                   return snapshot.hasData
                       ? NotificationListener<ScrollNotification>(
                           onNotification: _handlePageNotification,
-                          child: PageView.builder(
-                              physics: const BouncingScrollPhysics(),
+                          child: PreloadPageView.builder(
+                              physics: const AlwaysScrollableScrollPhysics(),
+                              preloadPagesCount: 10,
                               controller: _pageController,
                               scrollDirection: Axis.horizontal,
                               itemCount: snapshot.data.length,
@@ -76,13 +79,26 @@ class HomePageState extends State<HomePage> {
                                 final depth =
                                     max(0.5, (1.0 - (index - page).abs()));
 
-                                return TaskItemView(
+                                return Dismissible(
                                   key: UniqueKey(),
-                                  task: snapshot.data[index] ?? [],
-                                  onDelete: () => viewModel
-                                      .deleteTask(snapshot.data[index].id),
-                                  scale: scale,
-                                  scaleDepth: depth,
+                                  direction: DismissDirection.up,
+                                  onDismissed: (direction) {
+                                    showUndoFlushBar(
+                                        context,
+                                        () => {
+                                              viewModel.insertTask(
+                                                  snapshot.data[index])
+                                            });
+                                      viewModel.deleteTask(
+                                          snapshot.data[index].id
+                                      );
+                                  },
+                                  child: TaskItemView(
+                                    key: UniqueKey(),
+                                    task: snapshot.data[index] ?? [],
+                                    scale: scale,
+                                    scaleDepth: depth,
+                                  ),
                                 );
                               }),
                         )
@@ -111,5 +127,33 @@ class HomePageState extends State<HomePage> {
             )
           ])),
     );
+  }
+
+  showUndoFlushBar(BuildContext context, Function undoAction) {
+    Flushbar(
+      maxWidth: 120,
+      message: " ",
+      mainButton: NeumorphicButton(
+        child: Row(
+          children: [
+            Icon(Icons.refresh),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "undo",
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14),
+            )
+          ],
+        ),
+        onPressed: () {
+          undoAction();
+        },
+      ),
+      padding: EdgeInsets.all(24),
+      backgroundColor: Colors.transparent,
+      duration: Duration(seconds: 2),
+    ).show(context);
   }
 }
