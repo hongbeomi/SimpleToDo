@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:provider/provider.dart';
 import 'package:simpletodo/data/model/task.dart';
-import 'package:simpletodo/presentation/component/delete_dialog.dart';
 import 'package:simpletodo/presentation/page/detail_page.dart';
 import 'package:simpletodo/presentation/viewmodel/task_view_model.dart';
 

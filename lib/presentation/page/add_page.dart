@@ -7,6 +7,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:simpletodo/data/model/task.dart';
+import 'package:simpletodo/main.dart';
 
 import '../viewmodel/task_view_model.dart';
 
@@ -21,7 +22,6 @@ class AddPage extends StatefulWidget {
 
 class AddPageState extends State<AddPage> {
   String _title = "";
-  bool _result = false;
   String _imagePath = "";
 
   @override
@@ -121,13 +121,7 @@ class AddPageState extends State<AddPage> {
           padding: EdgeInsets.zero,
           duration: Duration(milliseconds: 300),
           onPressed: () {
-//            if (_image != null) {
-//              Navigator.push(context, MaterialPageRoute(builder: (_) {
-//                return ImageDetailScreen(imagePath: _image);
-//              }));
-//            } else {
             _getGalleryImage();
-//            }
           },
           style: NeumorphicStyle(
             boxShape: NeumorphicBoxShape.circle(),
